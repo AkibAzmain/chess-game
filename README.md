@@ -53,17 +53,14 @@ After starting, you'll see a output like this:
 
 Here uppercase letters are pieces of white and lowercase letters are pieces of black. The meaning every letters are:
 
-> K = King
-
-> Q = Queen
-
-> B = Bishop
-
-> N = Knight
-
-> R = Rook
-
-> P = Pawn
+Letter | Piece
+-- | --
+K | King
+Q | Queen
+B | Bishop
+N | Knight
+R | Rook
+P | Pawn
 
 After the board, you'll see a prompt which will want command. Commands are:
 
