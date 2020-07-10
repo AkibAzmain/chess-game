@@ -9,7 +9,7 @@ namespace chess {
 
 	bool move(string color) {
 		string query, src, dest;
-		bool valid, correct_piece;
+		bool valid, correct_piece, capture_own_piece;
 		do {
             valid = false;
             cout << color << " >>> ";
@@ -18,7 +18,7 @@ namespace chess {
             if (query == "exit") {
                 return false;
             }
-            if (query == "O-O") {
+            if (query == "O-O" || query == "o-o" || query == "0-0") {
                 if (color == "white") {
                     square[0][6] = square[0][4];
                     square[0][5] = square[0][7];
@@ -29,7 +29,7 @@ namespace chess {
                     square[7][4] = square[7][7] = ' ';
                 }
                 return true;
-            } else if (query == "O-O-O") {
+            } else if (query == "O-O-O" || query == "o-o-o" || query == "0-0-0") {
                 if (color == "white") {
                     square[0][2] = square[0][4];
                     square[0][3] = square[0][0];
@@ -56,7 +56,14 @@ namespace chess {
                     }
                     if (correct_piece) {
                         if (src != dest) {
-                            valid = true;
+                            if (color == "white") {
+                                capture_own_piece = square[y2][x2] != tolower(square[y2][x2]);
+                            } else {
+                                capture_own_piece = square[y2][x2] != toupper(square[y2][x2]);
+                            }
+                            if (!capture_own_piece) {
+                                valid = true;
+                            }
                         }
                     }
                 }
@@ -132,10 +139,12 @@ int main() {
 		cout << ">>> ";
 		getline(cin, command);
 		if (command == "move") {
-			chess::move("white");
-			chess::show();
-			chess::move("black");
-			chess::show();
+			if (chess::move("white")) {
+                chess::show();
+                if (chess::move("black")) {
+                    chess::show();
+                }
+            }
         } else if (command == "play") {
             chess::show();
             chess::play();
