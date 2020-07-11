@@ -1,4 +1,4 @@
-# A mini chess game, in terminal
+# A chess game, in terminal
 
 -------------------------------------------------------
 
