@@ -6,7 +6,7 @@ I just made this game for practicing C++ programming. You can play this game ver
 
 ## Compiling
 
-To compile this game, I have created a `Makefile` . You'll need `g++` installed on a linux computer. Just open a terminal and change working directory to downloaded repository, then execute this:
+This game doesn't use any libraries other than C++ standard library. So, this game doesn't have any extenal dependency and should compile easily with any compiler on any OS. To compile this game, I have created a `Makefile` . You'll need `g++` installed on a linux computer. Just open a terminal and change working directory to downloaded repository, then execute this:
 
 ```bash
 make
@@ -19,6 +19,8 @@ g++ chess.cpp -o chess
 ```
 
 For other compilers and operating systems, use appropriate commands. If you don't know the command, just Google "How to compile C++ program with your compiler on your OS".
+
+After compiling, you'll get a executable named `chess` . As this executable doesn't depend on any files in the repository, you can place it anywhere you want.
 
 ## Playing
 
@@ -101,7 +103,7 @@ white >>> e2 e4
     a   b   c   d   e   f   g   h
 ```
 
-Here, white moved the pawn ar e2 square to e4 square.
+Here, white moved the pawn at e2 square to e4 square.
 
 After entering white's move, you'll see a similar prompt again, like this:
 
@@ -109,6 +111,6 @@ After entering white's move, you'll see a similar prompt again, like this:
 black >>>
 ```
 
-It means it's black's turn. Now enter your move and you'll see the board after the move.
+It means it's black's turn. Now enter your move and you'll see the result after the move.
 
 To get out from playing mode, type exit and hit enter. You'll return to the default mode.
