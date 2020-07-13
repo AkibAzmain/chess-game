@@ -1,7 +1,7 @@
-/*#include <iostream>
+#include <iostream>
 #include <array>
 #include <stdexcept>
-#include <sstream>*/
+#include <sstream>
 
 namespace chess {
     enum class castle {
