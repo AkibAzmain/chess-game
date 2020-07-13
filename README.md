@@ -4,6 +4,10 @@
 
 I just made this game for practicing C++ programming. You can play this game very easily in terminal. But remember, to play this game you have to be honest.
 
+## Online demo
+
+To see an online demo, copy and paste the contents of `chess-online-demo.cpp` at [cpp.sh](http://cpp.sh). Note that this may not contain the latest version and may be buggy.
+
 ## Compiling
 
 This game doesn't use any libraries other than C++ standard library. So, this game doesn't have any extenal dependency and should compile easily with any compiler on any OS. To compile this game, I have created a `Makefile` . You'll need `g++` and `make` installed on a linux computer. Just open a terminal and change working directory to downloaded repository, then execute this:
