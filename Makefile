@@ -1,2 +1,4 @@
+CXX = g++
+
 all:
-	g++ chess.cpp -o chess
+	$(CXX) -I./ chess.cpp chess-ui.cpp -o chess $(CXXFLAGS)
