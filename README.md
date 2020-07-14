@@ -2,11 +2,11 @@
 
 -------------------------------------------------------
 
-I just made this game for practicing C++ programming. You can play this game very easily in terminal. But remember, to play this game you have to be honest.
+I just made this game for practicing C++ programming. You can play this game very easily in terminal.
 
 ## Online demo
 
-To see an online demo, copy and paste the contents of `chess-online-demo.cpp` at [cpp.sh](http://cpp.sh). Note that this may not contain the latest version and may be buggy.
+To see an online demo, copy and paste the contents of `chess-online-demo.cpp` at [cpp.sh](http://cpp.sh). Note that this is customized for previewing online and may not contain the latest version and may be buggy.
 
 ## Compiling
 
@@ -19,7 +19,7 @@ make
 Or you can also do this:
 
 ```bash
-g++ chess.cpp mini-chess.cpp -o chess
+g++ chess.cpp chess-ui.cpp -o chess
 ```
 
 I don't know why, but it compiles even with `gcc` (GNU C Compiler) on linux. If you don't have C++ compiler but have GNU C compiler, you can try like this (it should also work on your computer, but I'm not sure):
@@ -31,7 +31,7 @@ make CXX=gcc CXXFLAGS=-lstdc++
 For other compilers and operating systems, use appropriate commands. You can try this:
 
 ```bash
-make CXX=CommandOfYourCompiler
+make CXX=CommandForYourCompiler
 ```
 
 If you don't know the command, just Google "How to compile C++ program with your compiler on your OS".
@@ -95,7 +95,7 @@ To start playing, just type `play` and hit enter. You'll see a prompt again like
 white >>>
 ```
 
-Here, `white` means it's white's turn. In the prompt, type the square where the piece is now, then hit space key, and type the square where the piece will go. Note that this game will check if the move is valid, but it won't be able to check correctly most of the time. Here is an example:
+Here, `white` means it's white's turn. In the prompt, type the square where the piece is now, then hit space key, and type the square where the piece will go. Note that this game will check if the move is valid, but it won't be able to check correctly if you try to move pawn. Here is an example:
 
 ```
 white >>> e2 e4
