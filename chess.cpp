@@ -1,11 +1,72 @@
 #include "chess.h"
 #include <stdexcept>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
 // Namespace containing chess class
 namespace chess {
+
+    // This function checks whether a move a valid for a specific piece
+    bool chess::validate(color color, int x1, int y1, int x2, int y2, char piece) {
+
+        // Check if move is valid for king
+        if (piece == 'K') {
+                if (abs(x1 - x2) == 1 || abs(y1 - y2) == 1) {
+                    return true;
+                }
+
+        // Check if move is valid for queen
+        } else if (piece == 'Q') {
+            if (validate(color, x1, y1, x2, y2, 'R') || validate(color, x1, y1, x2, y2, 'B')) {
+                return true;
+            }
+
+        // Check if move is valid for bishop
+        } else if (piece == 'B') {
+            if (abs(x1 - x2) == abs(y1 - y2)) {
+                int distance = abs(x1 - x2), x_increment = -(distance / (x1 - x2)), y_increment = -(distance / (y1 - y2));
+                for (int x = x_increment, y = y_increment; abs(x) < abs(distance); x += x_increment, y += y_increment) {
+                    if (square[y1 + y][x1 + x] != ' ') {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+        // Check if move is valid for knight
+        } else if (piece == 'N') {
+            if ((abs(x1 - x2) == 2 && abs(y1 - y2) == 1) || (abs(x1 - x2) == 1 && abs(y1 - y2) == 2)) {
+                return true;
+            }
+
+        // Check if move is valid for rook
+        } else if (piece == 'R') {
+            if (!(x1 - x2 && y1 - y2) && (x1 - x2 || y1 - y2)) {
+                int distance = -((x1 - x2) + (y1 - y2));
+                for (int i = abs(distance) / distance; abs(i) < abs(distance); i += (abs(distance) / distance)) {
+                    if (x1 - x2) {
+                        if (square[y1][x1 + i] != ' ') {
+                            return false;
+                        }
+                    } else {
+                        if (square[y1 + i][x1] != ' ') {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+        // Check if move is valid for pawn
+        } else if (piece == 'P') {
+            return true;
+        }
+
+        // Tests failed, so return false
+        return false;
+    }
 
     // This function checks if castling is possible
     bool chess::validate(color color, castle castle_type) {
@@ -53,7 +114,7 @@ namespace chess {
     // This function checks if move is valid (except castling)
     bool chess::validate(color color, int x1, int y1, int x2, int y2) {
 
-        // Declare some needed variables
+        // Declare some required variables for validating
         bool valid = false, correct_piece, capture_own_piece;
 
         // Check if square is in range
@@ -84,7 +145,9 @@ namespace chess {
 
                         // Check if player is capturing his own piece
                         if (!capture_own_piece) {
-                            valid = true;
+
+                            // Do piece specific tests
+                            valid = validate(color, x1, y1, x2, y2, toupper(square[y1][x1]));
                         }
                     }
                 }
@@ -233,9 +296,9 @@ namespace chess {
         }
 
         // Clear all other squares
-        for (int x = 2; x < 6; x++) {
-            for (int y = 0; y < 8; y++) {
-                square[x][y] = ' ';
+        for (int y = 2; y < 6; y++) {
+            for (int x = 0; x < 8; x++) {
+                square[y][x] = ' ';
             }
         }
     }
