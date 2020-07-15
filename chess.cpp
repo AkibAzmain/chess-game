@@ -61,7 +61,23 @@ namespace chess {
 
         // Check if move is valid for pawn
         } else if (piece == 'P') {
-            return true;
+            if ((color == color::white && y2 - y1 == 1) || (color == color::black && y1 - y2 == 1)) {
+                if (x1 - x2 == 0 && square[y2][x2] == ' ') {
+                    return true;
+                } else if (abs(x1 - x2) == 1) {
+                    if (square[y2][x2] != ' ') {
+                        return true;
+                    } else if (last_move[0] == y1 && last_move[1] == x2) {
+                        if ((color == color::white && square[y1][x2] == 'p') || (color == color::black && square[y1][x2] == 'P')) {
+                            return (en_passant = true);
+                        }
+                    }
+                }
+            } else if ((color == color::white && y2 - y1 == 2 && y1 == 1) || (color == color::black && y1 - y2 == 2 && y1 == 6)) {
+                if (!(x1 - x2) && square[(y1 + y2) / 2][(x1 + x2) / 2] == ' ' && square[y2][x2] == ' ') {
+                    return true;
+                }
+            }
         }
 
         // Tests failed, so return false
@@ -157,7 +173,7 @@ namespace chess {
     }
 
     // This function works with the board directly
-    bool chess::move(color color, int x1, int y1, int x2, int y2, bool force) {
+    bool chess::move(color color, int x1, int y1, int x2, int y2, char promote_to, bool force) {
 
         // Do an essensial test, check if move is forced, if yes, check if square is out of range
         // Program will fail if skipped this test, and square is out of range
@@ -171,8 +187,29 @@ namespace chess {
 
         // Check if move is either forced or valid
         if (force || validate(color, x1, y1, x2, y2)) {
-                square[y2][x2] = square[y1][x1];
-                square[y1][x1] = ' ';
+            bool promote = false;
+            if (!promote_to && toupper(square[y1][x1]) == 'P' && (y2 == 7 || y2 == 1)) {
+                return false;
+            } else if (promote_to) {
+                if (toupper(promote_to) == 'Q' || toupper(promote_to) == 'R' || toupper(promote_to) == 'B' || toupper(promote_to) == 'N') {
+                    promote = true;
+                } else {
+                    return false;
+                }
+            }
+            square[y2][x2] = square[y1][x1];
+            square[y1][x1] = ' ';
+            last_move = {y2, x2};
+            if (promote) {
+                if (color == color::white) {
+                    square[y2][x2] = toupper(promote_to);
+                } else {
+                    square[y2][x2] = tolower(promote_to);
+                }
+            } else if (en_passant) {
+                square[y1][x2] = ' ';
+                en_passant = false;
+            }
         } else {
             return false;
         }
@@ -209,19 +246,20 @@ namespace chess {
             return true;
         }
 
-        // Declare two strings and a stringstream to extract square information
+        // Declare two strings, a char and a stringstream to extract square information
         stringstream squares(query);
         string src, dest;
+        char promote_to = 0;
 
         // Extract square information from string
-        squares >> src >> dest;
+        squares >> src >> dest >> promote_to;
         int x1 = tolower(src[0])-'a';
         int y1 = src[1]-'1';
         int x2 = tolower(dest[0])-'a';
         int y2 = dest[1]-'1';
 
         // Call move function with all informations, and return the value it returned
-        return move(color, x1, y1, x2, y2);
+        return move(color, x1, y1, x2, y2, promote_to);
     }
 
     // This function takes input input from user with standard input and moves
@@ -301,6 +339,8 @@ namespace chess {
                 square[y][x] = ' ';
             }
         }
+
+        en_passant = false;
     }
 
     // This function show the state of board, directly to terminal
