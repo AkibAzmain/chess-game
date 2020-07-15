@@ -26,6 +26,8 @@ namespace chess {
             bool move(color color, std::string query);
             bool move(color color);
             chess();
+            chess(std::string state);
+            void load(std::string state);
             void reset();
             void show();
             std::array<std::array<char, 8>, 8> state();

@@ -212,7 +212,7 @@ namespace chess {
         if (force) {
             for (int value : {x1, y1, x2, y2}) {
                 if (value > 7 || value < 0) {
-                    throw invalid_argument("Square is out of range!"); // Throw exception
+                    throw out_of_range("Square is out of range!"); // Throw exception
                 }
             }
         }
@@ -346,9 +346,45 @@ namespace chess {
         return true;
     }
 
-    // Constructor
+    // Setup the board
     chess::chess() {
         reset();
+    }
+
+    // Setup board with state from string
+    chess::chess(string state) {
+        load(state);
+    }
+
+    // This function loads board state from string
+    void chess::load(string state) {
+
+        // Prepare for loading board state
+        stringstream board(state);
+        string line;
+        bool correct_piece;
+
+        // Load board state
+        for (int y = 7; y >= 0; y--) {
+            getline(board, line);
+            for (int x = 0; x < 8; x++) {
+
+                // Check if correct piece are given
+                correct_piece = false;
+                for (char piece : {'K', 'Q', 'R', 'B', 'N', 'P'}) {
+                    if (correct_piece = (toupper(line[x]) == piece || line[x] == ' ')) break;
+                }
+
+                // If piece is correct add it
+                if (correct_piece) {
+                    square[y][x] = line[x];
+
+                // If not, throw an exception
+                } else {
+                    throw std::logic_error("input contains invalid pieces");
+                }
+            }
+        }
     }
 
     // This function will reset the board
@@ -397,10 +433,10 @@ namespace chess {
     // This function show the state of board, directly to terminal
     void chess::show() {
         cout << "  +---+---+---+---+---+---+---+---+" << endl;
-        for (int x = 7; x >= 0; x--) {
-            cout << x+1 << " | ";
-            for (int y = 0; y < 8; y++) {
-                cout << square[x][y] << " | ";
+        for (int y = 7; y >= 0; y--) {
+            cout << y+1 << " | ";
+            for (int x = 0; x < 8; x++) {
+                cout << square[y][x] << " | ";
             }
             cout << endl << "  +---+---+---+---+---+---+---+---+" << endl;
         }
