@@ -13,19 +13,25 @@ namespace chess {
 
         // Check if move is valid for king
         if (piece == 'K') {
-                if (abs(x1 - x2) == 1 || abs(y1 - y2) == 1) {
-                    return true;
-                }
+            if (abs(x1 - x2) == 1 || abs(y1 - y2) == 1) {
+                return true;
+            }
 
         // Check if move is valid for queen
         } else if (piece == 'Q') {
+
+            // If the move is valid for either rook or bishop, it is also valid for queen
             if (validate(color, x1, y1, x2, y2, 'R') || validate(color, x1, y1, x2, y2, 'B')) {
                 return true;
             }
 
         // Check if move is valid for bishop
         } else if (piece == 'B') {
+
+            // Check if bishop is moving diagonally
             if (abs(x1 - x2) == abs(y1 - y2)) {
+
+                // Check if all squares between bishop's current position and destination are empty, if not, move isn't valid
                 int distance = abs(x1 - x2), x_increment = -(distance / (x1 - x2)), y_increment = -(distance / (y1 - y2));
                 for (int x = x_increment, y = y_increment; abs(x) < abs(distance); x += x_increment, y += y_increment) {
                     if (square[y1 + y][x1 + x] != ' ') {
@@ -43,37 +49,63 @@ namespace chess {
 
         // Check if move is valid for rook
         } else if (piece == 'R') {
+
+            // Check if rook is moving either side by side or lengthwise, but not both
             if (!(x1 - x2 && y1 - y2) && (x1 - x2 || y1 - y2)) {
+
+                // Distance between rook's current position and destination
                 int distance = -((x1 - x2) + (y1 - y2));
+
+                // Check if all squares between rook's current position and destination are empty, if not, move isn't valid
                 for (int i = abs(distance) / distance; abs(i) < abs(distance); i += (abs(distance) / distance)) {
+
+                    // If rook is moving side by side
                     if (x1 - x2) {
                         if (square[y1][x1 + i] != ' ') {
                             return false;
                         }
+
+                    // If rook is moving lengthwise
                     } else {
                         if (square[y1 + i][x1] != ' ') {
                             return false;
                         }
                     }
                 }
+
+                // Every square between rook's current position and destination is empty, so move is valid
                 return true;
             }
 
         // Check if move is valid for pawn
         } else if (piece == 'P') {
+
+            // Check if pawn moving to next square
             if ((color == color::white && y2 - y1 == 1) || (color == color::black && y1 - y2 == 1)) {
+
+                // Check if pawn isn't leaving it's current file
                 if (x1 - x2 == 0 && square[y2][x2] == ' ') {
                     return true;
+
+                // Check if pawn is moving to a file next to the current file
                 } else if (abs(x1 - x2) == 1) {
+
+                    // Check if pawn if capturing
                     if (square[y2][x2] != ' ') {
                         return true;
+
+                    // Check if move is an en passant
                     } else if (last_move[0] == y1 && last_move[1] == x2) {
                         if ((color == color::white && square[y1][x2] == 'p') || (color == color::black && square[y1][x2] == 'P')) {
                             return (en_passant = true);
                         }
                     }
                 }
+
+            // Check if pawn is moving two squares, not leaving current file and this is the first move of the pawn
             } else if ((color == color::white && y2 - y1 == 2 && y1 == 1) || (color == color::black && y1 - y2 == 2 && y1 == 6)) {
+
+                // Check if destination square and the square between destination and pawn's current place is empty
                 if (!(x1 - x2) && square[(y1 + y2) / 2][(x1 + x2) / 2] == ' ' && square[y2][x2] == ' ') {
                     return true;
                 }
@@ -185,27 +217,43 @@ namespace chess {
             }
         }
 
-        // Check if move is either forced or valid
-        if (force || validate(color, x1, y1, x2, y2)) {
+        // Check if move is either forced or valid and check if it is a pawn move and it can be promoted
+        if ((force || validate(color, x1, y1, x2, y2)) && !(!promote_to && toupper(square[y1][x1]) == 'P' && (y2 == 7 || y2 == 1))) {
+
+            // Check if pawn is going to promoted, and if yes, check if the piece is correct
             bool promote = false;
-            if (!promote_to && toupper(square[y1][x1]) == 'P' && (y2 == 7 || y2 == 1)) {
-                return false;
-            } else if (promote_to) {
-                if (toupper(promote_to) == 'Q' || toupper(promote_to) == 'R' || toupper(promote_to) == 'B' || toupper(promote_to) == 'N') {
-                    promote = true;
-                } else {
+            if (promote_to) {
+                for (char piece : {'Q', 'R', 'B', 'N'}) {
+                    if (toupper(promote_to) == piece) {
+                        promote = true;
+                        break;
+                    }
+                }
+
+                // If piece isn't correct, move isn't valid
+                if (!promote) {
                     return false;
                 }
             }
+
+            // Move the piece
             square[y2][x2] = square[y1][x1];
             square[y1][x1] = ' ';
+
+            // Set the last_move variable to the position of destination square,
+            // it is needed to check if en passant is valid at function
+            // validate(color color, int x1, int y1, int x2, int y2, char piece)
             last_move = {y2, x2};
+
+            // Check if piece is going to promoted, if yes, promote it
             if (promote) {
                 if (color == color::white) {
                     square[y2][x2] = toupper(promote_to);
                 } else {
                     square[y2][x2] = tolower(promote_to);
                 }
+
+            // Check if move is en passant, if yes, capture (remove) the pawn
             } else if (en_passant) {
                 square[y1][x2] = ' ';
                 en_passant = false;
@@ -229,15 +277,17 @@ namespace chess {
             rank = 7;
         }
 
-        // Check if move is castling
-        if (query == "O-O" || query == "o-o" || query == "0-0") { // Check if move is short castling
+        // Check if move is short castling
+        if (query == "O-O" || query == "o-o" || query == "0-0") {
             if (!validate(color, castle::short_castle)) {
                 return false;
             }
             move(color, 4, rank, 6, rank, true);
             move(color, 7, rank, 5, rank, true);
             return true;
-        } else if (query == "O-O-O" || query == "o-o-o" || query == "0-0-0") { // Check if move is long castling
+
+        // Check if move is long castling
+        } else if (query == "O-O-O" || query == "o-o-o" || query == "0-0-0") {
             if (!validate(color, castle::long_castle)) {
                 return false;
             }
@@ -246,7 +296,7 @@ namespace chess {
             return true;
         }
 
-        // Declare two strings, a char and a stringstream to extract square information
+        // Declare two strings, a char and a stringstream to extract square information and move properly
         stringstream squares(query);
         string src, dest;
         char promote_to = 0;
@@ -340,6 +390,7 @@ namespace chess {
             }
         }
 
+        // Set en_passant variable to false, or the game may misbehave
         en_passant = false;
     }
 
