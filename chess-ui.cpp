@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
             board = &setup;
 
         // Catch exception, eg. invalid pieces in file
-        } catch (logic_error error) {
+        } catch (logic_error &error) {
             cout << "Error: " << error.what() << endl;
             return 1;
         }
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
                     chess.load(state);
 
                 // Catch logic_error, eg. invalid piece in input
-                } catch (std::logic_error error) {
+                } catch (std::logic_error &error) {
                     cout << "Error: " << error.what() << endl;
                     continue;
                 }

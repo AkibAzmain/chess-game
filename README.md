@@ -40,7 +40,7 @@ After compiling, you'll get a executable named `chess` . As this executable does
 
 ## Playing
 
-To game this game, just start the executable by executing
+To play this game, just start the executable by executing
 
 ```bash
 ./chess
@@ -84,10 +84,14 @@ After the board, you'll see a prompt which will want command. Commands are:
 
 Command | Meaning
 --------| -------
-play    | Start playing
+play    | Enter playing mode
 move    | Just one move for white, one for black
 reset   | Reset the board
+show    | Show the current state of board
+load    | Load game from file
+save    | Save game to file
 exit    | Exit the game
+q       | Exit the game
 
 To start playing, just type `play` and hit enter. You'll see a prompt again like this:
 
@@ -95,7 +99,7 @@ To start playing, just type `play` and hit enter. You'll see a prompt again like
 white >>>
 ```
 
-Here, `white` means it's white's turn. In the prompt, type the square where the piece is now, then hit space key, and type the square where the piece will go. Note that this game will check if the move is valid, but it won't be able to check correctly if you try to move pawn. Here is an example:
+Here, `white` means it's white's turn. In the prompt, type the square where the piece is now, then hit space key, and type the square where the piece will go. Here is an example:
 
 ```
 white >>> e2 e4
@@ -130,6 +134,32 @@ black >>>
 It means it's black's turn. Now enter your move and you'll see the result after the move.
 
 To get out from playing mode, type exit and hit enter. You'll return to the default mode. Note that this command is disabled for black, as this will cause black to lose his chance to move.
+
+### Saving your game
+
+If you want to save the game, get out from playing mode, then save it. The syntax is like this:
+
+```
+save FileName
+```
+
+Note that this game can't handle file names with spaces. Now, as you have saved you game, you can exit. You'll see a file with your given name is created.
+
+### Loading your saved game
+
+To load your game, start the game and load it. The syntax is like this:
+
+```
+load FileName
+```
+
+Or, you can load the game at start time like this:
+
+```bash
+./chess FileName
+```
+
+Again remember that this game can't handle file names with spaces.
 
 ## For enthusiasts and developers
 
