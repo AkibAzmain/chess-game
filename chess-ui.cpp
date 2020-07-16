@@ -160,6 +160,12 @@ int main(int argc, char** argv) {
             // Open the file
             ofstream file(cmd_argv[1]);
 
+            // Check if file opened
+            if (!file.is_open()) {
+                perror("Can't access/create file");
+                continue;
+            }
+
             // Write to file
             for (int y = 7; y >= 0; y--) {
                 for (int x = 0; x < 8; x++) {
