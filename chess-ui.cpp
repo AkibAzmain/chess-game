@@ -20,21 +20,24 @@ int main(int argc, char** argv) {
     if (argc > 1) {
 
         // Prepare for loading the file
-        FILE* data = fopen(argv[1], "r");
-        if (!data) {
+        ifstream data(argv[1]);
+        if (!data.is_open()) {
             perror("Can't open file");
             return 1;
         }
 
         // Convert file contents to string
-        string state = "";
-        int character;
-        while ((character = fgetc(data)) != EOF) {
-            state += character;
+        string line, state = "";
+        for (int i = 0; i < 8; i++) {
+            getline(data, line);
+            for (int x = 0; x < 8; x++){
+                state += line[x];
+            }
+            state += '\n';
         }
 
         // Close the file
-        fclose(data);
+        data.close();
 
         // Try to setup board
         try {
@@ -114,22 +117,26 @@ int main(int argc, char** argv) {
             filestream >> filename;
 
             // Open file
-            FILE* data = fopen(filename, "r");
+            ifstream data(filename);
 
             // Check if file is opened
-            if (!data) {
+            if (!data.is_open()) {
                 perror("Can't open file");
                 continue;
             } else {
+
                 // Convert file contents to string
-                string state = "";
-                int character;
-                while ((character = fgetc(data)) != EOF) {
-                    state += character;
+                string line, state = "";
+                for (int i = 0; i < 8; i++) {
+                    getline(data, line);
+                    for (int x = 0; x < 8; x++){
+                        state += line[x];
+                    }
+                    state += '\n';
                 }
 
                 // Close the file
-                fclose(data);
+                data.close();
 
                 // Try to setup board
                 try {
