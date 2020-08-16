@@ -143,8 +143,6 @@ If you want to save the game, get out from playing mode, then save it. The synta
 save FileName
 ```
 
-Note that this game can't handle file names with spaces. Now, as you have saved you game, you can exit. You'll see a file with your given name is created.
-
 ### Loading your saved game
 
 To load your game, start the game and load it. The syntax is like this:
@@ -158,8 +156,6 @@ Or, you can load the game at start time like this:
 ```bash
 ./chess FileName
 ```
-
-Again remember that this game can't handle file names with spaces.
 
 ## For enthusiasts and developers
 
