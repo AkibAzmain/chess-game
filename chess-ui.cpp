@@ -78,6 +78,9 @@ int main(int argc, char** argv) {
             cmd_argv.push_back(arg);
         }
 
+        // Check if user entered empty input
+        if (command == "") continue;
+
         // Check if user wants just one move for both colors
         if (cmd_argv[0] == "move") {
             if (chess.move(chess::color::white)) {
@@ -112,10 +115,7 @@ int main(int argc, char** argv) {
             }
 
             // Prepare for loading the file
-            string filename;
-            for (uint i = 5; i < filename.size(); i++) {
-                filename += command[i];
-            }
+            string filename = string(command.begin() + 5, command.end());
 
             // Open file
             ifstream data(filename);
@@ -165,12 +165,11 @@ int main(int argc, char** argv) {
             // Prepare for writing state to file
             std::array<std::array<char, 8>, 8> state = chess.state();
 
+            // Prepare for loading the file
+            string filename = string(command.begin() + 5, command.end());
+
             // Open the file
-            string filename;
-            for (uint i = 5; i < filename.size(); i++) {
-                filename += command[i];
-            }
-            ofstream file(cmd_argv[1]);
+            ofstream file(filename);
 
             // Check if file opened
             if (!file.is_open()) {
@@ -192,10 +191,6 @@ int main(int argc, char** argv) {
         // Check if user wants to exit
         } else if (cmd_argv[0] == "exit" || cmd_argv[0] == "q") {
             play = false;
-
-        // Check if user entered empty input
-        } else if (cmd_argv[0] == "") {
-            continue;
 
         // Inform user that his command is incorrect
         } else {
