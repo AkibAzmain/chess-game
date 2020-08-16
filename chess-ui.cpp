@@ -112,9 +112,10 @@ int main(int argc, char** argv) {
             }
 
             // Prepare for loading the file
-            char filename[cmd_argv[1].length()];
-            stringstream filestream(cmd_argv[1]);
-            filestream >> filename;
+            string filename;
+            for (uint i = 5; i < filename.size(); i++) {
+                filename += command[i];
+            }
 
             // Open file
             ifstream data(filename);
@@ -165,6 +166,10 @@ int main(int argc, char** argv) {
             std::array<std::array<char, 8>, 8> state = chess.state();
 
             // Open the file
+            string filename;
+            for (uint i = 5; i < filename.size(); i++) {
+                filename += command[i];
+            }
             ofstream file(cmd_argv[1]);
 
             // Check if file opened
